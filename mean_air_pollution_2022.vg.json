@@ -1,0 +1,39 @@
+{
+  "width": 800,
+  "height": 350,
+  "title": "Mean Air Pollution Level By Station in Year 2022",
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/main/malaysia.districts.topojson",
+        "format": {"type": "topojson", "feature": "malaysia.districts"}
+      },
+      "mark": {"type": "geoshape", "fill": "white", "stroke": "black",  "clip": true}
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/main/APIMS-final-ready.csv"
+      },
+      "mark": {"type": "circle", "stroke": "black", "strokeWidth": 0.5},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "size": {
+          "value": 100 
+        },
+        "color": {
+          "field": "Value",
+          "type": "quantitative",
+          "scale": {"scheme": "reds"},
+          "legend": {"tickMinStep": 20},
+          "title": "Level"
+        },
+        "tooltip": [
+          {"field": "Area", "type": "nominal", "title": "Station"},
+          {"field": "Value", "type": "quantitative"}
+        ]
+      }
+    }
+  ],
+  "projection": {"type": "mercator"}
+}
