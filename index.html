@@ -1,25 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- Import Vega & Vega-Lite (does not have to be from CDN) -->
+  <!-- Import Vega & Vega-Lite -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
-  
+
+  <style>
+    /* Cover both common tooltip class names and make rules high priority */
+    .vega-tooltip, .vg-tooltip {
+      font-family: sans-serif !important;
+      font-size: 13px !important;
+      background-color: rgba(255,255,255,0.97) !important;
+      border: 1px solid #ccc !important;
+      border-radius: 6px !important;
+      padding: 8px 10px !important;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
+      line-height: 1.4em !important;
+      color: #111 !important;
+    }
+
+    /* Make sure table layout is used if tooltip contains a table */
+    .vega-tooltip table, .vg-tooltip table {
+      border-collapse: collapse !important;
+    }
+
+    /* key = attribute name; value = attribute value */
+    .vega-tooltip table tr td.key,
+    .vg-tooltip table tr td.key {
+      font-weight: bold !important;   /* attribute name bold */
+      padding-right: 6px !important;
+      vertical-align: top !important;
+    }
+
+    .vega-tooltip table tr td.value,
+    .vg-tooltip table tr td.value {
+      font-weight: normal !important; /* value regular */
+    }
+
+    /* fallback: sometimes keys are <th> */
+    .vega-tooltip table tr th,
+    .vg-tooltip table tr th {
+      font-weight: bold !important;
+    }
+  </style>
 </head>
 <body>
-  
-<div id="symbol_map"></div>
 
-<script type="text/javascript">
+  <div id="symbol_map"></div>
+  <div id="temp_chart" style="margin-top:40px;"></div>
 
-  var spec2 = "mean_air_pollution_2022.vg.json";
-  vegaEmbed('#symbol_map', spec2).then(function(result) {
-    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
-  }).catch(console.error);
-</script>
+  <script type="text/javascript">
+    // First chart (no special tooltip option)
+    vegaEmbed('#symbol_map', 'mean_air_pollution_2022.vg.json')
+      .then(function(result){})
+      .catch(console.error);
 
-  
+    // Second chart
+    vegaEmbed('#temp_chart', 'avg_temp_month_state_2019.vg.json')
+      .then(function(result){})
+      .catch(console.error);
+  </script>
 </body>
 </html>
-
