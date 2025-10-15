@@ -1,0 +1,169 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Radial daily humidity visualization",
+  "width": 500,
+  "height": 500,
+  "title": "",
+  "signals": [
+    {
+      "name": "selectedState",
+      "value": "Selangor",
+      "bind": {
+        "input": "select",
+        "options": [
+          "Selangor", "Johor", "Kedah", "Kelantan", "Melaka", "Pahang",
+          "Penang", "Perak", "Sabah", "Sarawak", "Terengganu", "Kuala Lumpur"
+        ],
+        "name": "Select a State: "
+      }
+    }
+  ],
+
+  "data": [
+    {
+      "name": "humid",
+      "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/refs/heads/main/weather_summary_by_state_month.csv",
+      "format": {"type": "csv"},
+      "transform": [
+        {"type": "filter", "expr": "datum.state == selectedState"},
+        {
+          "type": "formula",
+          "as": "dateObj",
+          "expr": "toDate(datum.date)"
+        },
+        {
+          "type": "formula",
+          "as": "dayOfYear",
+          "expr": "floor((datum.dateObj - datetime(year(datum.dateObj), 0, 1)) / (1000*60*60*24))"
+        },
+        {
+          "type": "formula",
+          "as": "angle",
+          "expr": "(2 * PI * (datum.dayOfYear / 365)) - (PI / 2)"
+        },
+        {"type": "formula", "as": "inner_r", "expr": "80"},
+        {"type": "formula", "as": "outer_r", "expr": "datum.inner_r + datum.avg_humidity * 1.5"},
+        {"type": "formula", "as": "x1", "expr": "300 + cos(datum.angle) * datum.inner_r"},
+        {"type": "formula", "as": "y1", "expr": "300 + sin(datum.angle) * datum.inner_r"},
+        {"type": "formula", "as": "x2", "expr": "300 + cos(datum.angle) * datum.outer_r"},
+        {"type": "formula", "as": "y2", "expr": "300 + sin(datum.angle) * datum.outer_r"}
+      ]
+    },
+    {
+      "name": "month_labels",
+      "values": [
+        {"month": "Jan", "index": 0},
+        {"month": "Feb", "index": 1},
+        {"month": "Mar", "index": 2},
+        {"month": "Apr", "index": 3},
+        {"month": "May", "index": 4},
+        {"month": "Jun", "index": 5},
+        {"month": "Jul", "index": 6},
+        {"month": "Aug", "index": 7},
+        {"month": "Sep", "index": 8},
+        {"month": "Oct", "index": 9},
+        {"month": "Nov", "index": 10},
+        {"month": "Dec", "index": 11}
+      ],
+      "transform": [
+        {
+          "type": "formula",
+          "as": "angle",
+          "expr": "(-PI/2) + (datum.index * (2 * PI / 12))"
+        },
+        {"type": "formula", "as": "x", "expr": "300 + cos(datum.angle) * 250"},
+        {"type": "formula", "as": "y", "expr": "300 + sin(datum.angle) * 250"}
+      ]
+    },
+    {
+      "name": "month_dividers",
+      "values": [
+        {"index": 0}, {"index": 1}, {"index": 2}, {"index": 3},
+        {"index": 4}, {"index": 5}, {"index": 6}, {"index": 7},
+        {"index": 8}, {"index": 9}, {"index": 10}, {"index": 11}
+      ],
+      "transform": [
+        {
+          "type": "formula",
+          "as": "angle",
+          "expr": "(datum.index * (2 * PI / 12)) - (PI / 2)"
+        },
+        {"type": "formula", "as": "x1", "expr": "300 + cos(datum.angle) * 80"},
+        {"type": "formula", "as": "y1", "expr": "300 + sin(datum.angle) * 80"},
+        {"type": "formula", "as": "x2", "expr": "300 + cos(datum.angle) * 230"},
+        {"type": "formula", "as": "y2", "expr": "300 + sin(datum.angle) * 230"}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "linear",
+      "domain": {"data": "humid", "field": "avg_humidity"},
+      "range": {"scheme": "viridis"}
+    }
+  ],
+  "marks": [
+    {
+      "type": "rule",
+      "from": {"data": "month_dividers"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x1"},
+          "y": {"field": "y1"},
+          "x2": {"field": "x2"},
+          "y2": {"field": "y2"},
+          "stroke": {"value": "black"},
+          "strokeWidth": {"value": 1.2},
+          "strokeDash": {"value": [7, 3]},
+          "opacity": {"value": 1}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "humid"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x1"},
+          "y": {"field": "y1"},
+          "x2": {"field": "x2"},
+          "y2": {"field": "y2"},
+          "stroke": {"scale": "color", "field": "avg_humidity"},
+          "strokeWidth": {"value": 2},
+          "strokeCap": {"value": "round"},
+          "strokeOpacity": {"value": 0.9},
+          "tooltip": {
+            "signal": "{'Date': datum.date, 'Avg Humidity(%)': datum.avg_humidity}"
+          }
+          },
+          "update": {"opacity": {"value": 0.95}}
+        }
+    },
+    {
+      "type": "text",
+      "from": {"data": "month_labels"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x"},
+          "y": {"field": "y"},
+          "text": {"field": "month"},
+          "fontSize": {"value": 14},
+          "fill": {"value": "black"},
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"}
+        }
+      }
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "title": "Average Humidity (%)",
+      "orient": "right",
+      "titleAlign": "center"
+    }
+  ],
+
+  "config": {"background": "white"}
+}

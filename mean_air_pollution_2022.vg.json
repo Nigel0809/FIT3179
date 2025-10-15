@@ -1,7 +1,15 @@
 {
-  "width": 800,
+  "width": 1100,
   "height": 350,
-  "title": "Malaysia Mean Air Pollution Level By Station in Year 2022",
+  "autosize": {
+  "type": "fit",
+  "contains": "padding"
+  },
+  "title": "",
+  "config": {
+    "view": {"stroke": null}, 
+    "background": null
+  },
   "layer": [
     {
       "data": {
@@ -37,4 +45,3 @@
   ],
   "projection": {"type": "mercator"}
 }
-

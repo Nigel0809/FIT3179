@@ -1,8 +1,9 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "width": 800,
+  "width": 1000,
   "height": 350,
-  "title": "Average temperature by month and state (2019)",
+  "title": "",
+  
   "data": {
     "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/refs/heads/main/air_pollution_2019_by_state_month.csv"
   },
@@ -59,7 +60,7 @@
         "x": {
           "field": "month",
           "type": "ordinal",
-          "title": "Month of 2019",
+          "title": "",
           "sort": [
             "Jan","Feb","Mar","Apr","May","Jun",
             "Jul","Aug","Sep","Oct","Nov","Dec"
@@ -130,6 +131,7 @@
 
   "config": {
     "axis": { "labelFont": "sans-serif", "titleFont": "sans-serif" },
-    "title": { "fontSize": 16, "fontWeight": "bold" }
+    "title": { "fontSize": 16, "fontWeight": "bold" },
+    "view": {"stroke": null}
   }
 }

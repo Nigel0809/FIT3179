@@ -1,65 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <!-- Import Vega & Vega-Lite -->
-  <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+<meta charset="UTF-8">
+<title>Summary of Weather Data in Malaysia - Year 2022</title>
 
-  <style>
-    /* Cover both common tooltip class names and make rules high priority */
-    .vega-tooltip, .vg-tooltip {
-      font-family: sans-serif !important;
-      font-size: 13px !important;
-      background-color: rgba(255,255,255,0.97) !important;
-      border: 1px solid #ccc !important;
-      border-radius: 6px !important;
-      padding: 8px 10px !important;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
-      line-height: 1.4em !important;
-      color: #111 !important;
-    }
+<!-- Import Vega & Vega-Lite -->
+<script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
 
-    /* Make sure table layout is used if tooltip contains a table */
-    .vega-tooltip table, .vg-tooltip table {
-      border-collapse: collapse !important;
-    }
+<style>
+  /* Page */
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9f9f9;
+    margin: 20px;
+    color: #111;
+  }
 
-    /* key = attribute name; value = attribute value */
-    .vega-tooltip table tr td.key,
-    .vg-tooltip table tr td.key {
-      font-weight: bold !important;   /* attribute name bold */
-      padding-right: 6px !important;
-      vertical-align: top !important;
-    }
+  .page-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #111;
+    font-family: 'Times New Roman', serif;
+  }
 
-    .vega-tooltip table tr td.value,
-    .vg-tooltip table tr td.value {
-      font-weight: normal !important; /* value regular */
-    }
+  /* Dashboard sections */
+  .dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-    /* fallback: sometimes keys are <th> */
-    .vega-tooltip table tr th,
-    .vg-tooltip table tr th {
-      font-weight: bold !important;
-    }
-  </style>
+  .chart-section {
+    display: flex;
+    flex-direction: column; /* stack title, chart, text */
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  /* Titles */
+  .chart-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px; /* small gap to chart */
+  }
+
+  /* Vega chart containers */
+  .chart-large #symbol_map {
+    width: 100%;
+    height: 400px;
+  }
+
+  .chart-2 #temp_chart_1{
+    width: 100%;
+    height: 450px;
+  }
+  
+  .chart-3-content {
+    display: flex;
+    gap: 20px;           /* space between chart and paragraph */
+    align-items: flex-start; /* align top edges */
+  }
+
+  /* Chart container width for side-by-side */
+  .chart-3-content #temp_chart_2 {
+    flex: 1.2;  /* chart takes more space */
+    height: 600px;
+  }
+
+  /* Paragraph width */
+  .chart-3-content .chart-description {
+    flex: 1;  /* paragraph takes remaining space */
+    font-size: 15px;
+    line-height: 1.5em;
+  }
+
+  /* Paragraph / text boxes */
+  .chart-text-box {
+    margin-top: 10px;
+    font-size: 15px;
+    clear: both;
+  }
+
+  .chart-description {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.5em;
+    color: #333;
+  }
+
+  /* Tooltip styling */
+  .vega-tooltip, .vg-tooltip {
+    font-family: sans-serif !important;
+    font-size: 13px !important;
+    background-color: rgba(255,255,255,0.97) !important;
+    border: 1px solid #ccc !important;
+    border-radius: 6px !important;
+    padding: 8px 10px !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
+    line-height: 1.4em !important;
+    color: #111 !important;
+  }
+  .vega-tooltip table, .vg-tooltip table { border-collapse: collapse !important; }
+  .vega-tooltip table tr td.key, .vg-tooltip table tr td.key { font-weight: bold !important; padding-right: 6px !important; vertical-align: top !important; }
+  .vega-tooltip table tr td.value, .vg-tooltip table tr td.value { font-weight: normal !important; }
+</style>
 </head>
+
 <body>
 
-  <div id="symbol_map"></div>
-  <div id="temp_chart" style="margin-top:40px;"></div>
+  <!-- Page Title -->
+  <h1 class="page-title">Summary of Malaysia Weather Data in Year 2022</h1>
 
-  <script type="text/javascript">
-    // First chart (no special tooltip option)
-    vegaEmbed('#symbol_map', 'mean_air_pollution_2022.vg.json')
-      .then(function(result){})
-      .catch(console.error);
+  <div class="dashboard">
 
-    // Second chart
-    vegaEmbed('#temp_chart', 'avg_temp_month_state_2019.vg.json')
-      .then(function(result){})
-      .catch(console.error);
-  </script>
+    <!-- First chart: largest -->
+    <div class="chart-section chart-large">
+      <div class="chart-title">Mean Air Pollution Across Year</div>
+      <div id="symbol_map"></div>
+      <div class="chart-text-box">
+        <p>
+          This map visualizes the mean air pollution levels across various monitoring stations in Malaysia for the year 2022. Each circle represents a station, with the size constant and the color indicating the pollution level based on the recorded values. Darker red shades correspond to higher pollution levels, allowing for quick identification of areas with elevated air quality concerns. Users can hover over each station to see the exact location and pollution value, providing both a spatial overview and detailed data insights. This visualization helps policymakers and the public understand regional variations in air quality and identify hotspots that may require attention.
+        </p>
+      </div>
+    </div>
+
+    <!-- Second chart -->
+    <div class="chart-section chart-2">
+      <div class="chart-title">Average temperature by Month and State</div>
+      <div id="temp_chart_1"></div>
+      <div class="chart-text-box">
+        <p>
+          The chart above presents the average temperature by month and state across Malaysia. Each colored line represents a different state, allowing for comparison of temperature trends throughout the year. Overall, the average temperature remains relatively consistent, fluctuating between 26°C and 30°C, reflecting Malaysia’s stable tropical climate. A slight increase in temperature is observed from January to April, followed by a modest decline during the mid-year months (May to September). The red dashed line marks the Southwest Monsoon Transition, which typically brings warmer and drier conditions from March onward. Despite minor regional variations—such as slightly higher temperatures in inland states like Kedah and Kuala Lumpur compared to coastal or highland regions—the overall trend indicates minimal temperature variation nationwide. The dropdown menu labeled “Select a State” allows users to focus on specific states for closer examination.
+        </p>
+      </div>
+    </div>
+
+    <!-- Third chart -->
+    <!-- Third chart -->
+    <div class="chart-section chart-small chart-3">
+      <div class="chart-title">Humidity by State</div>
+      <div class="chart-3-content">
+        <div id="temp_chart_2"></div>
+        <div class="chart-description">
+          <p>
+            The chart beside illustrates the average humidity levels in 2022 by state, displayed in a circular (polar) format representing the months of the year. Each bar radiating from the center corresponds to a day within the year, with color intensity indicating the average humidity percentage — ranging from around 70% (purple tones) to over 90% (yellow tones). The chart enables a clear visualization of seasonal humidity trends, showing that humidity generally remains high throughout the year, typical of Malaysia’s tropical climate. Some months, particularly April to June, show slightly lower humidity levels (more purple and green shades), while December to January tend to have higher humidity (more yellow shades), coinciding with the monsoon season. The dropdown menu labeled “Select a State” allows users to view data for different states, with Selangor currently selected.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // Embed Vega charts
+  vegaEmbed('#symbol_map', 'mean_air_pollution_2022.vg.json', { actions: false })
+    .then(result => {}).catch(console.error);
+
+  vegaEmbed('#temp_chart_1', 'avg_temp_month_state_2019.vg.json', { actions: false })
+    .then(result => {}).catch(console.error);
+
+  vegaEmbed('#temp_chart_2', 'avg_humid_2022_by_state.vg.json', { actions: false })
+    .then(result => {}).catch(console.error);
+</script>
+
 </body>
 </html>
