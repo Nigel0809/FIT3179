@@ -1,8 +1,8 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Radial daily humidity visualization",
-  "width": 500,
-  "height": 500,
+  "description": "Radial daily humidity visualization with correct month alignment",
+  "width": 50,
+  "height": 50,
   "title": "",
   "signals": [
     {
@@ -12,34 +12,60 @@
         "input": "select",
         "options": [
           "Selangor", "Johor", "Kedah", "Kelantan", "Melaka", "Pahang",
-          "Penang", "Perak", "Sabah", "Sarawak", "Terengganu", "Kuala Lumpur"
+          "Pulau Pinang", "Perak", "Sabah", "Sarawak", "Terengganu", "Kuala Lumpur"
         ],
         "name": "Select a State: "
       }
+    },
+    {
+      "name": "selectedMonth",
+      "value": "Jan"
     }
   ],
 
   "data": [
+    {
+      "name": "month_days",
+      "values": [
+        {"monthNum": 0, "daysInMonth": 31},
+        {"monthNum": 1, "daysInMonth": 28},
+        {"monthNum": 2, "daysInMonth": 31},
+        {"monthNum": 3, "daysInMonth": 30},
+        {"monthNum": 4, "daysInMonth": 31},
+        {"monthNum": 5, "daysInMonth": 30},
+        {"monthNum": 6, "daysInMonth": 31},
+        {"monthNum": 7, "daysInMonth": 31},
+        {"monthNum": 8, "daysInMonth": 30},
+        {"monthNum": 9, "daysInMonth": 31},
+        {"monthNum": 10, "daysInMonth": 30},
+        {"monthNum": 11, "daysInMonth": 31}
+      ]
+    },
     {
       "name": "humid",
       "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/refs/heads/main/weather_summary_by_state_month.csv",
       "format": {"type": "csv"},
       "transform": [
         {"type": "filter", "expr": "datum.state == selectedState"},
+        {"type": "formula", "as": "dateObj", "expr": "toDate(datum.date)"},
+        {"type": "formula", "as": "monthNum", "expr": "month(datum.dateObj)"},
+        {"type": "formula", "as": "dayOfMonth", "expr": "date(datum.dateObj)"},
         {
-          "type": "formula",
-          "as": "dateObj",
-          "expr": "toDate(datum.date)"
+          "type": "lookup",
+          "from": "month_days",
+          "key": "monthNum",
+          "fields": ["monthNum"],
+          "values": ["daysInMonth"]
         },
         {
           "type": "formula",
-          "as": "dayOfYear",
-          "expr": "floor((datum.dateObj - datetime(year(datum.dateObj), 0, 1)) / (1000*60*60*24))"
+          "as": "month",
+          "expr": "timeFormat(datum.dateObj, '%b')"
         },
         {
           "type": "formula",
           "as": "angle",
-          "expr": "(2 * PI * (datum.dayOfYear / 365)) - (PI / 2)"
+          "expr": "(2 * PI * ((datum.monthNum + (datum.dayOfMonth / datum.daysInMonth)) / 12)) - (PI / 2)"
         },
         {"type": "formula", "as": "inner_r", "expr": "80"},
         {"type": "formula", "as": "outer_r", "expr": "datum.inner_r + datum.avg_humidity * 1.5"},
@@ -95,14 +121,16 @@
       ]
     }
   ],
+
   "scales": [
     {
       "name": "color",
       "type": "linear",
       "domain": {"data": "humid", "field": "avg_humidity"},
-      "range": {"scheme": "viridis"}
+      "range": ["#DEEBF7", "darkblue"]
     }
   ],
+
   "marks": [
     {
       "type": "rule",
@@ -129,16 +157,38 @@
           "y": {"field": "y1"},
           "x2": {"field": "x2"},
           "y2": {"field": "y2"},
-          "stroke": {"scale": "color", "field": "avg_humidity"},
+          "stroke": [
+            {
+              "test": "datum.month === selectedMonth",
+              "scale": "color",
+              "field": "avg_humidity"
+            },
+            {"value": "#CCCCCC"}
+          ],
           "strokeWidth": {"value": 2},
           "strokeCap": {"value": "round"},
-          "strokeOpacity": {"value": 0.9},
+          "strokeOpacity": [
+            {"test": "datum.month === selectedMonth", "value": 0.9},
+            {"test": "selectedMonth !== null", "value": 0.2},
+            {"value": 0.9}
+          ],
           "tooltip": {
             "signal": "{'Date': datum.date, 'Avg Humidity(%)': datum.avg_humidity}"
           }
-          },
-          "update": {"opacity": {"value": 0.95}}
+        },
+        "update": {
+          "stroke": [
+            {"test": "datum.month === selectedMonth", "scale": "color", "field": "avg_humidity"},
+            {"value": "#CCCCCC"}
+          ],
+          "strokeOpacity": [
+            {"test": "datum.month === selectedMonth", "value": 0.9},
+            {"test": "selectedMonth !== null", "value": 0.2},
+            {"value": 0.9}
+          ],
+          "opacity": {"value": 0.95}
         }
+      }
     },
     {
       "type": "text",
@@ -149,19 +199,30 @@
           "y": {"field": "y"},
           "text": {"field": "month"},
           "fontSize": {"value": 14},
-          "fill": {"value": "black"},
+          "fill": [
+            {"test": "datum.month === selectedMonth", "value": "darkblue"},
+            {"value": "grey"}
+          ],
           "align": {"value": "center"},
           "baseline": {"value": "middle"}
+        },
+        "update": {
+          "fill": [
+            {"test": "datum.month === selectedMonth", "value": "darkblue"},
+            {"value": "grey"}
+          ]
         }
       }
     }
   ],
+
   "legends": [
     {
       "fill": "color",
       "title": "Average Humidity (%)",
-      "orient": "right",
-      "titleAlign": "center"
+      "orient": "top-left",
+      "titleAlign": "left",
+      "padding":5
     }
   ],
 

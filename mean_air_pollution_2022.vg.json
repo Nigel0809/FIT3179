@@ -2,46 +2,101 @@
   "width": 1100,
   "height": 350,
   "autosize": {
-  "type": "fit",
-  "contains": "padding"
+    "type": "fit",
+    "contains": "padding"
   },
   "title": "",
   "config": {
-    "view": {"stroke": null}, 
+    "view": {"stroke": null},
     "background": null
   },
+  "projection": {"type": "mercator"},
+  "data": {
+    "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/refs/heads/main/APIMS-final-ready.csv"
+  },
+  "transform": [
+    {
+      "filter": "datum.Year == 2022"
+    },
+    {
+      "filter": "datum.Value >= 0 && !isNaN(datum.lon) && !isNaN(datum.lat)"
+    },
+    {
+      "calculate": "datum.Value <= 20 ? '0 - 20' : datum.Value <= 40 ? '20 - 40' : datum.Value <= 60 ? '40 - 60' : '60 - 80'",
+      "as": "Value_Range"
+    }
+  ],
   "layer": [
     {
       "data": {
-        "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/main/malaysia.districts.topojson",
-        "format": {"type": "topojson", "feature": "malaysia.districts"}
+        "graticule": {
+          "step": [1, 1], 
+          "extentMajor": [[99, 1], [119, 7]],
+          "extentMinor": [[99, 1], [119, 7]]
+        }
       },
-      "mark": {"type": "geoshape", "fill": "white", "stroke": "black",  "clip": true}
+      "mark": {"type": "geoshape", "fill": null, "stroke": "lightgray", "strokeWidth": 0.5, "strokeDash": [2, 2]}
     },
     {
       "data": {
-        "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/main/APIMS-final-ready.csv"
+        "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/refs/heads/main/geoBoundaries-MYS-ADM1.topojson",
+        "format": {"type": "topojson", "feature": "MYSADM1gbOpen"}
       },
-      "mark": {"type": "circle", "stroke": "black", "strokeWidth": 0.5},
+      "mark": {"type": "geoshape", "fill": "lightblue", "stroke": "black"}
+    },
+    {
+      "mark": {"type": "circle", "stroke": "black", "strokeWidth": 0.5, "fillOpacity": 0.85, "fill": "darkorange"},
       "encoding": {
         "longitude": {"field": "lon", "type": "quantitative"},
         "latitude": {"field": "lat", "type": "quantitative"},
         "size": {
-          "value": 100 
-        },
-        "color": {
-          "field": "Value",
-          "type": "quantitative",
-          "scale": {"scheme": "reds"},
-          "legend": {"tickMinStep": 20},
-          "title": "Level"
+          "field": "Value_Range",
+          "type": "nominal",
+          "scale": {
+            "domain": ["0 - 20", "20 - 40", "40 - 60", "60 - 80"],
+            "range": [80, 500, 5000, 30000] 
+          },
+          "legend": {"title": "Level"}
         },
         "tooltip": [
+          {"field": "State", "type": "nominal", "title": "State"},
           {"field": "Area", "type": "nominal", "title": "Station"},
-          {"field": "Value", "type": "quantitative"}
+          {"field": "Value", "type": "quantitative", "title": "Level", "format": ".2f"}
         ]
       }
+    },
+     {
+      "data": {
+        "values": [
+          {"state": "Johor", "lon": 104.5, "lat": 2.2}, 
+          {"state": "Kedah", "lon": 100.5, "lat": 6.7}, 
+          {"state": "Kelantan", "lon": 101.7, "lat": 6.5},
+          {"state": "Melaka", "lon": 101.1, "lat": 1.9},  
+          {"state": "N. Sembilan", "lon": 100, "lat": 2.3},  
+          {"state": "Pahang", "lon": 103.7, "lat": 3.5}, 
+          {"state": "Perak", "lon": 99.2, "lat": 4.3},
+          {"state": "Perlis", "lon": 99.4, "lat": 7.0},
+          {"state": "Penang", "lon": 98.7, "lat": 5.4},  
+          {"state": "Selangor", "lon": 99.5, "lat": 3.4},
+          {"state": "Terengganu", "lon": 103.5, "lat": 5.0},
+          {"state": "Sabah", "lon": 114.5, "lat": 6},
+          {"state": "Sarawak", "lon": 111.5, "lat": 3.5}
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "color": "black",
+        "dx": 10,
+        "dy": 0,
+        "align": "left"
+      },
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "text": {"field": "state", "type": "nominal"}
+      }
     }
-  ],
-  "projection": {"type": "mercator"}
+  ]
 }

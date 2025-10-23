@@ -1,0 +1,59 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "A heatmap showing average visibility by state and month.",
+  "data": {
+    "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/refs/heads/main/weather_summary_by_state_month.csv"
+  },
+  "title": {
+    "text": "",
+    "anchor": "start",
+    "fontSize": 16,
+    "fontWeight": "bold"
+  },
+  "width": 1050,
+  "height": 400,
+  "transform": [
+    {
+      "calculate": "timeFormat(toDate(datum.date), '%b')", 
+      "as": "month"
+    },
+    {
+      "aggregate": [
+        {"op": "mean", "field": "avg_visibility", "as": "mean_visibility"}
+      ],
+      "groupby": ["state", "month"]
+    }
+  ],
+  "mark": "rect",
+  "encoding": {
+    "x": {
+      "field": "month",
+      "type": "ordinal",
+      "sort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      "title": ""
+    },
+    "y": {
+      "field": "state",
+      "type": "ordinal",
+      "title": ""
+    },
+    "color": {
+      "field": "mean_visibility",
+      "type": "quantitative",
+      "title": "Visibility (km)",
+      "scale": {
+        "range": ["#DEEBF7", "darkblue"]
+      }
+    },
+    "tooltip": [
+      {"field": "state", "title": "State"},
+      {"field": "month", "title": "Month"},
+      {"field": "mean_visibility", "title": "Average Visibility (km)", "format": ".2f"}
+    ]
+  },
+  "config": {
+    "view": {"stroke": "transparent"},
+    "axis": {"domainColor": "#ccc", "tickColor": "#ccc"},
+    "header": {"labelFontSize": 12, "titleFontSize": 14}
+  }
+}

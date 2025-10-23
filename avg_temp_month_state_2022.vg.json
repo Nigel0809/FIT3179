@@ -1,0 +1,149 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 1000,
+  "height": 350,
+  "title": "",
+
+  "data": {
+    "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/refs/heads/main/air_pollution_2019_by_state_month.csv"
+  },
+
+  "params": [
+    {
+      "name": "StateSelection",
+      "value": "All",
+      "bind": {
+        "input": "select",
+        "options": [
+          "All",
+          "Johor", "Kedah", "Kelantan", "Kuala Lumpur", "Labuan", "Melaka",
+          "Pahang", "Perak", "Pulau Pinang", "Sabah", "Sarawak", "Selangor",
+          "Terengganu"
+        ],
+        "labels": [
+          "All States",
+          "Johor", "Kedah", "Kelantan", "Kuala Lumpur", "Labuan", "Melaka",
+          "Pahang", "Perak", "Pulau Pinang", "Sabah", "Sarawak", "Selangor",
+          "Terengganu"
+        ],
+        "name": "Select a State: "
+      }
+    }
+  ],
+
+  "transform": [
+    {
+      "calculate": "StateSelection == 'All' ? (datum.state == 'Pulau Pinang' ? 'highlight' : 'fade') : (datum.state == StateSelection ? 'highlight' : 'hide')",
+      "as": "display_flag"
+    },
+    {
+      "filter": "datum.display_flag != 'hide'"
+    }
+  ],
+
+  "layer": [
+    {
+      "mark": {"type": "line", "point": true, "strokeWidth": 3},
+      "encoding": {
+        "x": {
+          "field": "month",
+          "type": "ordinal",
+          "title": "",
+          "sort": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        },
+        "y": {
+          "field": "avg_temperature",
+          "type": "quantitative",
+          "title": "Average Temperature (°C)"
+        },
+        "detail": {"field": "state"},
+        "color": {
+          "condition": {
+            "test": "datum.display_flag == 'highlight'",
+            "field": "state",
+            "title": "State",
+            "type": "nominal",
+            "scale": {
+              "domain": [
+                "Johor", "Kedah", "Kelantan", "Kuala Lumpur", "Labuan", "Melaka",
+                "Pahang", "Perak", "Pulau Pinang", "Sabah", "Sarawak", "Selangor",
+                "Terengganu"
+              ],
+            "range": [
+              "#1f77b4",  
+              "#17becf",  
+              "#2ca02c",  
+              "#FFDD00",  
+              "#9467bd",  
+              "#8c564b",  
+              "#e377c2",  
+              "#7f7f7f",  
+              "#ff7f0e",  
+              "#bcbd22",  
+              "#393b79",  
+              "#637939",  
+              "#8c6d31"   
+            ]
+
+            }
+          },
+          "value": "lightgray"
+        },
+        "opacity": {
+          "condition": [
+            {"test": "datum.display_flag == 'highlight'", "value": 1},
+            {"test": "datum.display_flag == 'fade'", "value": 0.25}
+          ],
+          "value": 0
+        },
+        "tooltip": [
+          {"field": "state", "title": "State"},
+          {"field": "month", "title": "Month"},
+          {"field": "avg_temperature", "title": "Average Temp (°C)", "format": ".2f"}
+        ]
+      }
+    },
+
+    {
+      "data": { "values": [{"month": "Mar"}] },
+      "mark": {"type": "rule", "strokeDash": [4, 4], "color": "red"},
+      "encoding": {
+        "x": {
+          "field": "month",
+          "type": "ordinal",
+          "sort": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        }
+      }
+    },
+
+    {
+      "data": { "values": [{"month": "Mar", "label": "Southwest Monsoon Transition"}] },
+      "mark": {
+        "type": "text",
+        "color": "red",
+        "fontSize": 12,
+        "fontStyle": "italic",
+        "fontWeight": "bold",
+        "align": "left",
+        "dx": 8,
+        "dy": 120
+      },
+      "encoding": {
+        "x": {
+          "field": "month",
+          "type": "ordinal",
+          "sort": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        },
+        "y": {"datum": 33},
+        "text": {"field": "label"}
+      }
+    }
+  ],
+
+  "config": {
+    "axis": {"labelFont": "sans-serif", "titleFont": "sans-serif"},
+    "title": {"fontSize": 16, "fontWeight": "bold"},
+    "view": {"stroke": null}
+  }
+}
+
