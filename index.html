@@ -16,6 +16,7 @@
     background-color: #5b84c4;
     margin: 0px;
     color: #111;
+    overflow-x: hidden;
 }
 
 .page-title {
@@ -37,6 +38,7 @@
             text-shadow: 0 10px 10px rgba(0, 0, 0, 0.8);
             width: 100%;
             margin-bottom: 50px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.782);
         }
 
 /* Dashboard sections */
@@ -57,7 +59,12 @@
     /* Horizontal padding removed from outer wrapper for alignment */
     padding: 20px 0; 
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.378);
+}
+
+.chart-section:hover {
+  transform: translateY(-8px); /* Move up slightly */
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.782); /* Deeper shadow */
 }
 
 /* Inner wrapper for consistent padding in non-flanking charts. */
@@ -73,6 +80,7 @@
     margin-bottom: 5px; 
     text-align: center; 
     font-family: 'Times New Roman', serif;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.347);
 }
 
 /* Vega chart containers */
@@ -118,11 +126,16 @@
 
 .text-note {
     flex: 1 1 55%;
-    color: #4b5563;
-    font-size: 14px;
-    line-height: 1.6;
-    padding-left: 0;
-    border-left: none;
+    color: #11224d;
+    font-size: 18px;
+    line-height: 1.3;
+    border-left: 5px;
+    text-align: justify; 
+    border-left: 4px solid #fb9b50;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: #fb9a501c;
+    
 }
 
 .text-row {
@@ -130,7 +143,9 @@
     gap: 25px;
     align-items: center;
     justify-content: space-between;
+    margin-top: 20px;
     margin-bottom: 14px;
+    text-align: justify; 
 }
 
 .text-column {
@@ -280,17 +295,15 @@
     <div class="dashboard">
 
         <!-- First chart: largest -->
-        <div class="chart-section chart-large">
+        <div class="chart-section chart-large" style="background-color: rgb(238, 251, 255);">
             <div class="chart-section-content"> <!-- Uniform 100px padding applied here -->
-                <div class="chart-title">Air Pollution Level</div>
+                <div class="chart-title" style="color: #11224d;">🏭Air Pollution Level Detected by Station</div>
                 <div class="text-row">
                     <div class="text-note">
-                        This map visualizes the mean air pollution levels across various monitoring stations in Malaysia for the year 2022. Each circle represents a station, with the size constant indicating the pollution level based on the recorded values. 
-                        Bigger size correspond to higher pollution levels, allowing for quick identification of areas
+                        The Air Pollution Level map visualizes data from various monitoring stations. Each circle represents a station, and the <b>size indicates the air pollution level (API) recorded in 2022</b>. Areas with larger circles, such as specific spots in <b>Selangor and Penang</b>, signify <b>higher pollution levels</b> that warrant closer attention and policy review.
                     </div>
                     <div class="text-note">
-                        with elevated air quality concerns. 
-                        Users can hover over each station to see the exact location and pollution value, providing both a spatial overview and detailed data insights. This visualization helps policymakers and the public understand regional variations in air quality and identify hotspots that require attention.
+                        A key observation is the spatial overview, which shows that hotspots tend to <b>cluster near industrial centers</b> on the West Coast of Peninsular Malaysia. States like <b>Sabah and Sarawak</b> show generally <b>lower and more dispersed pollution levels</b>, suggesting a correlation between economic activity and localized air quality issues.
                     </div> 
                 </div>
                 <div id="symbol_map"></div>
@@ -298,15 +311,14 @@
         </div>
 
         <!-- Second chart: Avg Temp -->
-        <div class="chart-section chart-2">
+        <div class="chart-section chart-2" style="background-color: rgb(238, 251, 255);">
             <div class="chart-section-content"> <!-- Uniform 100px padding applied here -->
-                <div class="chart-title">Temperature</div>
+                <div class="chart-title" style="color: #11224d;">🌡️Temperature</div>
                 <div class="text-row">
                     <div class="text-note">
-                        The chart above presents the average temperature by month and state across Malaysia. Each colored line represents a different state, allowing for comparison of temperature trends throughout the year. Overall, the average temperature remains relatively consistent, fluctuating between reflecting Malaysia’s stable tropical climate. A slight increase in temperature is observed from January to April, followed by a modest decline during the mid-year months (May to September). 
-                    </div>
+                        The graph clearly demonstrates the <b>stable, tropical climate of Malaysia</b>, with the average temperature across all states remain <b>consistent throughout the year</b>. The tight clustering of the lines indicates <b>minimal national temperature variation</b>, the overall thermal experience is very uniform. </div>
                     <div class="text-note">
-                        The red dashed line marks the Southwest Monsoon Transition, which typically brings warmer and drier conditions from March onward. Despite minor regional variations—such as slightly higher temperatures in inland states like Kedah and Kuala Lumpur compared to coastal or highland regions—the overall trend indicates minimal temperature variation nationwide. The dropdown menu labeled “Select a State” allows users to focus on specific states for closer examination.
+                        A noticeable trend is the <b>general temperature starts to decline during the mid-year months (May to September).</b> The red dashed line specifically marks the <b>Southwest Monsoon transition period (March onward)</b>, a seasonal wind pattern that <b>brings air from the ocean to land</b>, resulting in <b>decreasing in temperature.</b>
                     </div> 
                 </div>
                 <div id="temp_chart_1"></div>
@@ -315,16 +327,23 @@
 
     
         <!-- Third chart: Avg Visibility -->
-        <div class="chart-section chart-2">
+        <div class="chart-section chart-2" style="background-color: rgb(238, 251, 255);">
             <div class="chart-section-content"> <!-- Uniform 100px padding applied here -->
-                <div class="chart-title">Visibility</div>
+                <div class="chart-title" style="color: #11224d;">🌫️Visibility</div>
+                <div class="text-row">
+                    <div class="text-note">
+                        This heatmap visualisation illustrates the <b>average monthly visibility (in kilometres) across various Malaysian states throughout the year by color luminance.</b> This design allows for easy comparison of visibility trends between states and over time, <b>highlighting both seasonal and regional variations</b>.</div>
+                    <div class="text-note">
+                        <b>Most states generally experience high visibility throughout the year,</b> but certain months and regions show reduced visibility possibly due to factors such as haze, rainfall, or monsoon seasons. <b>Pulau Pinang show noticeable fluctuations, suggesting seasonal weather patterns affecting air clarity.</b>
+                    </div> 
+                </div>
                 <div id="temp_chart_3"></div>
             </div>
         </div>
 
         
         <!-- NEW WRAPPER: Flanking container that anchors the navigation arrows AND provides the box styling -->
-        <div id="flanking-wrapper" class="chart-section">
+        <div id="flanking-wrapper" class="chart-section" style="background-color: rgb(238, 251, 255);">
 
             <!-- NAVIGATION BUTTON: LEFT (Previous Month) -->
             <div id="prev-month-circle" class="circle-nav left" onclick="showPrevMonth()">
@@ -333,22 +352,30 @@
 
             <!-- Inner content wrapper to push content away from arrows -->
             <div class="chart-content-inner">
+                <div class="text-row">
+                    <div class="text-note">
+                        The radial chart illustrates <b>Malaysia's average humidity levels by month for the selected state.</b> The deep blue shades showing that the state generally experiences high moisture. <b>Humidity tends to peak during the early and late months of the year, coinciding with the monsoon seasons.</b>
+                    </div>
+                    <div class="text-note">
+                        The bar chart compares mean wind speeds across Malaysian states for January. <b>Kelantan records the highest wind speed, suggesting stronger monsoon influence in the east coast region.</b> In contrast, <b>states like Selangor and Labuan experience calmer winds</b>, reflecting regional climatic variations across Malaysia.
+                    </div> 
+                </div>
             
                 <!-- START: SINGLE COMBINED CHART SECTION -->
                 <div class="chart-section-combined">
                     
                     <!-- 1. Humidity Chart Content Column -->
                     <div class="chart-content-col">
-                        <div class="chart-title">Humidity</div>
+                        <div class="chart-title" style="color: #11224d;">💧Humidity</div>
                         <div class="chart-3-content">
-                            <div id="temp_chart_2"></div>
+                            <div id="temp_chart_2" ></div>
                         </div>
                     </div>
 
                     <!-- 2. Wind Speed Chart Content Column -->
                     <div class="chart-content-col">
-                        <div class="chart-title" id="wind-chart-title">
-                            Wind Speed (Jan)
+                        <div class="chart-title" id="wind-chart-title" style="color: #11224d;">
+                            🍃Wind Speed (Jan)
                         </div>
                         
                         <div id="chart-container"></div>
@@ -367,12 +394,36 @@
         </div>
         <!-- End of #flanking-wrapper -->
 
-
     </div>
+
+       <footer style="
+        background-color: #0b1a33;
+        color: white;
+        text-align: left;
+        padding: 10px 20px;
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 14px;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+        ">
+        © 34172629 Nigel Tan Yu Zhe — FIT3179 Data Visualisation | Monash University | 20 October 2025
+         <div></div>
+        Data Sources: <a href="https://www.kaggle.com/datasets/shahmirvarqha/weather-data-malaysia/data?select=full_weather.csv" target="_blank" style="color: #66b3ff; text-decoration: none;">
+        Malaysia's Weather Data (1996-2024)</a> |
+        <a href="https://www.kaggle.com/datasets/ynshung/malaysia-air-pollution-index" target="_blank" style="color: #66b3ff; text-decoration: none;">
+        Air Pollution Index (API) in Malaysia</a> |
+        <a href="https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/MYS/ADM1/geoBoundaries-MYS-ADM1.topojson" target="_blank" style="color: #66b3ff; text-decoration: none;">
+        Malaysia - Subnational Administrative Boundaries</a> |
+        <a href=" https://open.dosm.gov.my/data-catalogue/air_pollution" target="_blank" style="color: #66b3ff; text-decoration: none;">
+        Monthly Air Pollution</a> 
+        </footer>
+
 
 </div>
    <script>
-    // 1. **CORRECTED:** The Vega JSON object is defined directly here.
+    // 1. The Vega JSON object is defined directly here.
     const vegaSpec = {
       "$schema": "https://vega.github.io/schema/vega/v5.json",
       "description": "Bar chart of mean monthly wind speed by state (fixed Y-scale).",
@@ -380,7 +431,7 @@
       "height": 500,
       "padding": {"bottom": 50},
       "title": "",
-
+      "background":"transparent",
       "signals": [
         {
           "name": "selectedMonth",
@@ -473,7 +524,7 @@
               "y2": {"scale": "yscale", "value": 0},
               "fill": {"value": "lightblue"},
               "tooltip": {
-                "signal": "{'State': datum.state, 'Month': datum.month, 'Mean Wind Speed (m/s)': format(datum.mean_wind_speed, '.2f')}"
+                "signal": "{'State': datum.state, 'Mean Wind Speed (m/s)': format(datum.mean_wind_speed, '.2f')}"
               }
             }
           }
@@ -529,7 +580,7 @@
             const titleElement = document.getElementById('wind-chart-title');
             if (titleElement) {
                 titleElement.innerText = 
-                    'Wind Speed (' + fullMonthName + ')';
+                    '🍃Wind Speed (' + fullMonthName + ')';
             }
 
             if (humidityView) {

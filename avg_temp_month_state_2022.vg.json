@@ -1,8 +1,9 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "width": 1000,
+  "width": 1050,
   "height": 350,
   "title": "",
+  "background":null,
 
   "data": {
     "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/refs/heads/main/air_pollution_2019_by_state_month.csv"
@@ -38,6 +39,10 @@
     },
     {
       "filter": "datum.display_flag != 'hide'"
+    },
+    {
+      "calculate": "datum.month == 'Jan' ? 'January' : datum.month == 'Feb' ? 'February' : datum.month == 'Mar' ? 'March' : datum.month == 'Apr' ? 'April' : datum.month == 'May' ? 'May' : datum.month == 'Jun' ? 'June' : datum.month == 'Jul' ? 'July' : datum.month == 'Aug' ? 'August' : datum.month == 'Sep' ? 'September' : datum.month == 'Oct' ? 'October' : datum.month == 'Nov' ? 'November' : 'December'",
+      "as": "month_full"
     }
   ],
 
@@ -98,15 +103,15 @@
         },
         "tooltip": [
           {"field": "state", "title": "State"},
-          {"field": "month", "title": "Month"},
-          {"field": "avg_temperature", "title": "Average Temp (°C)", "format": ".2f"}
+          {"field": "month_full", "title": "Month"},
+          {"field": "avg_temperature", "title": "Average Temperature (°C)", "format": ".2f"}
         ]
       }
     },
 
     {
       "data": { "values": [{"month": "Mar"}] },
-      "mark": {"type": "rule", "strokeDash": [4, 4], "color": "red"},
+      "mark": {"type": "rule", "strokeDash": [4, 4], "color": "#193a6f"},
       "encoding": {
         "x": {
           "field": "month",
@@ -120,7 +125,7 @@
       "data": { "values": [{"month": "Mar", "label": "Southwest Monsoon Transition"}] },
       "mark": {
         "type": "text",
-        "color": "red",
+        "color": "#193a6f",
         "fontSize": 12,
         "fontStyle": "italic",
         "fontWeight": "bold",
@@ -132,7 +137,12 @@
         "x": {
           "field": "month",
           "type": "ordinal",
-          "sort": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+          "sort": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+          "axis": {
+            "labelAngle": 0,
+            "labelAlign": "center",
+            "labelBaseline": "top"
+          }
         },
         "y": {"datum": 33},
         "text": {"field": "label"}
@@ -143,7 +153,13 @@
   "config": {
     "axis": {"labelFont": "sans-serif", "titleFont": "sans-serif"},
     "title": {"fontSize": 16, "fontWeight": "bold"},
-    "view": {"stroke": null}
+    "axisX": {"labelFontSize": 16},
+    "view": {"stroke": null},
+    "style": {
+        "tooltip": {
+          "fontSize": 30
+        }
+      }
   }
 }
 

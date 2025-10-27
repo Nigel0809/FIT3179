@@ -1,5 +1,5 @@
 {
-  "width": 1100,
+  "width": 1200,
   "height": 350,
   "autosize": {
     "type": "fit",
@@ -76,7 +76,7 @@
           {"state": "Pahang", "lon": 103.7, "lat": 3.5}, 
           {"state": "Perak", "lon": 99.2, "lat": 4.3},
           {"state": "Perlis", "lon": 99.4, "lat": 7.0},
-          {"state": "Penang", "lon": 98.7, "lat": 5.4},  
+          {"state": "Penang", "lon": 98.9, "lat": 5.4},  
           {"state": "Selangor", "lon": 99.5, "lat": 3.4},
           {"state": "Terengganu", "lon": 103.5, "lat": 5.0},
           {"state": "Sabah", "lon": 114.5, "lat": 6},

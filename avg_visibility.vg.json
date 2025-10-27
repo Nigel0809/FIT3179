@@ -1,6 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "description": "A heatmap showing average visibility by state and month.",
+  "background":"transparent",
   "data": {
     "url": "https://raw.githubusercontent.com/Nigel0809/FIT3179/refs/heads/main/weather_summary_by_state_month.csv"
   },
@@ -22,6 +23,10 @@
         {"op": "mean", "field": "avg_visibility", "as": "mean_visibility"}
       ],
       "groupby": ["state", "month"]
+    },
+    {
+      "calculate": "datum.month == 'Jan' ? 'January' : datum.month == 'Feb' ? 'February' : datum.month == 'Mar' ? 'March' : datum.month == 'Apr' ? 'April' : datum.month == 'May' ? 'May' : datum.month == 'Jun' ? 'June' : datum.month == 'Jul' ? 'July' : datum.month == 'Aug' ? 'August' : datum.month == 'Sep' ? 'September' : datum.month == 'Oct' ? 'October' : datum.month == 'Nov' ? 'November' : 'December'",
+      "as": "month_full"
     }
   ],
   "mark": "rect",
@@ -30,7 +35,13 @@
       "field": "month",
       "type": "ordinal",
       "sort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      "title": ""
+      "title": "",
+      "axis": {
+        "labelAngle": 0,
+        "labelAlign": "center",
+        "labelBaseline": "top",
+        "fontSize": 30
+      }
     },
     "y": {
       "field": "state",
@@ -40,20 +51,22 @@
     "color": {
       "field": "mean_visibility",
       "type": "quantitative",
-      "title": "Visibility (km)",
+      "title": ["Visibility", "(km)"],
       "scale": {
         "range": ["#DEEBF7", "darkblue"]
       }
     },
     "tooltip": [
       {"field": "state", "title": "State"},
-      {"field": "month", "title": "Month"},
+      {"field": "month_full", "title": "Month"},
       {"field": "mean_visibility", "title": "Average Visibility (km)", "format": ".2f"}
     ]
   },
   "config": {
     "view": {"stroke": "transparent"},
     "axis": {"domainColor": "#ccc", "tickColor": "#ccc"},
+    "axisX": {"labelFontSize": 16},
+    "axisY": {"labelFontWeight": "bold"},
     "header": {"labelFontSize": 12, "titleFontSize": 14}
   }
 }

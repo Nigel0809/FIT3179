@@ -4,6 +4,7 @@
   "width": 50,
   "height": 50,
   "title": "",
+  "background":"transparent",
   "signals": [
     {
       "name": "selectedState",
@@ -126,7 +127,7 @@
     {
       "name": "color",
       "type": "linear",
-      "domain": {"data": "humid", "field": "avg_humidity"},
+      "domain": [60, 100],
       "range": ["#DEEBF7", "darkblue"]
     }
   ],
@@ -173,7 +174,7 @@
             {"value": 0.9}
           ],
           "tooltip": {
-            "signal": "{'Date': datum.date, 'Avg Humidity(%)': datum.avg_humidity}"
+            "signal": "{'Date': datum.date, 'Average Humidity (%)': format(datum.avg_humidity, '.2f')}"
           }
         },
         "update": {
@@ -211,6 +212,24 @@
             {"test": "datum.month === selectedMonth", "value": "darkblue"},
             {"value": "grey"}
           ]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"value": 300},
+          "y": {"value": 300},
+          "text": {"signal": "selectedState"},
+          "fontSize": {"value": 22},
+          "fontWeight": {"value": "bold"},
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"},
+          "fill": {"value": "darkblue"}
+        },
+        "update": {
+          "text": {"signal": "selectedState"}
         }
       }
     }
